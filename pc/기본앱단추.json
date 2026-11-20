@@ -1,0 +1,62 @@
+[
+  { "name": "유튜브", "exe": ["chrome", "msedge", "whale", "firefox"], "title": "YouTube", "keys": [
+    { "icon": "⏯️", "label": "재생·멈춤", "key": "K" },
+    { "icon": "⏪", "label": "10초 뒤로", "key": "J" },
+    { "icon": "⏩", "label": "10초 앞으로", "key": "L" },
+    { "icon": "⛶", "label": "전체 화면", "key": "F" },
+    { "icon": "💬", "label": "자막", "key": "C" },
+    { "icon": "🐢", "label": "느리게", "key": "shift+," },
+    { "icon": "🐇", "label": "빠르게", "key": "shift+." },
+    { "icon": "🔇", "label": "소리 끄기", "key": "M" }
+  ] },
+  { "name": "PDF", "exe": ["chrome", "msedge", "whale"], "title": ".pdf", "keys": [
+    { "icon": "⬆️", "label": "이전 쪽", "key": "PageUp" },
+    { "icon": "⬇️", "label": "다음 쪽", "key": "PageDown" },
+    { "icon": "📄", "label": "쪽 맞춤", "key": "ctrl+\\" },
+    { "icon": "➕", "label": "확대", "key": "ctrl+=" },
+    { "icon": "➖", "label": "축소", "key": "ctrl+-" },
+    { "icon": "⛶", "label": "전체 화면", "key": "F11" }
+  ] },
+  { "name": "크롬·엣지", "exe": ["chrome", "msedge", "whale", "firefox"], "keys": [
+    { "icon": "➕", "label": "새 탭", "key": "ctrl+T" },
+    { "icon": "✖️", "label": "탭 닫기", "key": "ctrl+W" },
+    { "icon": "◀️", "label": "뒤로", "key": "alt+Left" },
+    { "icon": "🔄", "label": "새로고침", "key": "F5" },
+    { "icon": "⛶", "label": "전체 화면", "key": "F11" },
+    { "icon": "🔍", "label": "확대", "key": "ctrl+=" },
+    { "icon": "🔎", "label": "축소", "key": "ctrl+-" },
+    { "icon": "↩️", "label": "닫은 탭 열기", "key": "ctrl+shift+T" }
+  ] },
+  { "name": "파워포인트", "exe": ["POWERPNT"], "keys": [
+    { "icon": "🎬", "label": "처음부터 쇼", "key": "F5" },
+    { "icon": "▶️", "label": "이 쪽부터 쇼", "key": "shift+F5" },
+    { "icon": "⏮️", "label": "이전", "key": "Left" },
+    { "icon": "⏭️", "label": "다음", "key": "Right" },
+    { "icon": "⬛", "label": "검은 화면", "key": "B" },
+    { "icon": "⬜", "label": "흰 화면", "key": "W" },
+    { "icon": "🖊️", "label": "펜", "key": "ctrl+P" },
+    { "icon": "🧽", "label": "필기 지우기", "key": "E" },
+    { "icon": "🖱️", "label": "화살표", "key": "ctrl+A" },
+    { "icon": "⏹️", "label": "쇼 끝내기", "key": "Esc" }
+  ] },
+  { "name": "한글", "exe": ["Hwp"], "keys": [
+    { "icon": "💾", "label": "저장", "key": "ctrl+S" },
+    { "icon": "📝", "label": "다른 이름으로", "key": "alt+V" },
+    { "icon": "🖨️", "label": "인쇄", "key": "alt+P" },
+    { "icon": "↩️", "label": "되돌리기", "key": "ctrl+Z" }
+  ] },
+  { "name": "엑셀", "exe": ["EXCEL"], "keys": [
+    { "icon": "💾", "label": "저장", "key": "ctrl+S" },
+    { "icon": "🖨️", "label": "인쇄", "key": "ctrl+P" },
+    { "icon": "🔽", "label": "필터", "key": "ctrl+shift+L" },
+    { "icon": "↩️", "label": "되돌리기", "key": "ctrl+Z" }
+  ] },
+  { "name": "팟플레이어", "exe": ["PotPlayerMini64", "PotPlayerMini", "PotPlayer64", "PotPlayer"], "keys": [
+    { "icon": "⏯️", "label": "재생·멈춤", "key": "Space" },
+    { "icon": "⏪", "label": "뒤로", "key": "Left" },
+    { "icon": "⏩", "label": "앞으로", "key": "Right" },
+    { "icon": "⛶", "label": "전체 화면", "key": "Enter" },
+    { "icon": "🔊", "label": "소리 크게", "key": "Up" },
+    { "icon": "🔉", "label": "소리 작게", "key": "Down" }
+  ] }
+]

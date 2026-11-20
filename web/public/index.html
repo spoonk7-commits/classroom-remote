@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="리모컨">
+<meta name="theme-color" content="#111318">
+<link rel="apple-touch-icon" href="icon.png">
+<title>리모컨</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <span class="dot" id="dot"></span>
+  <nav class="tabs" role="tablist">
+    <button type="button" class="tab on" data-tab="deck" role="tab" aria-selected="true">단추</button>
+    <button type="button" class="tab" data-tab="pad" role="tab" aria-selected="false">제스처</button>
+    <button type="button" class="tab" data-tab="att" role="tab" aria-selected="false">출결</button>
+    <button type="button" class="tab" data-tab="files" role="tab" aria-selected="false">파일</button>
+  </nav>
+  <button type="button" class="pw" id="pw" aria-label="연결 끊기">⏻</button>
+</header>
+
+<main>
+  <div class="appbar" id="appbar" hidden>
+    <h3 id="appname"></h3>
+    <div class="appkeys" id="appkeys"></div>
+  </div>
+
+  <section id="deck" class="view on">
+    <div class="pages" id="pages"></div>
+    <div class="pdots" id="pdots"></div>
+  </section>
+
+  <section id="pad" class="view">
+    <div class="padarea" id="padarea">
+      <div class="guide">
+        <p><b>한 손가락</b> 왼쪽 · 오른쪽 — 다음 쪽 · 이전 쪽</p>
+        <p><b>한 손가락</b> 위 · 아래 — 아래로 · 위로 넘기기</p>
+        <p><b>두 손가락</b> 위 · 아래 — 소리 크게 · 작게</p>
+        <p><b>두 손가락</b> 왼쪽 · 오른쪽 — 되돌리기 · 다시 하기</p>
+        <p><b>두 손가락</b> 톡 — 소리 끄기 · 켜기</p>
+      </div>
+    </div>
+    <div class="padkeys">
+      <button type="button" data-g="switch">창 전환</button>
+      <button type="button" data-g="desktop">바탕화면</button>
+      <button type="button" data-g="zoomin">확대</button>
+      <button type="button" data-g="zoomout">축소</button>
+    </div>
+  </section>
+
+  <section id="att" class="view">
+    <div class="tt" id="tt"></div>
+    <div class="attbar">
+      <select id="cls" aria-label="반"></select>
+      <span id="attinfo"></span>
+    </div>
+    <div class="roster" id="roster"></div>
+    <div class="attfoot">
+      <span id="attsum"></span>
+      <button type="button" class="attsave" id="attsave">저장</button>
+    </div>
+  </section>
+
+  <section id="files" class="view">
+    <div class="fbtns">
+      <label class="fbig">사진 찍기<input type="file" id="fcam" accept="image/*" capture="environment" hidden></label>
+      <label class="fbig">사진·파일 보내기<input type="file" id="fpick" multiple hidden></label>
+    </div>
+    <div class="fprog" id="fprog" hidden><div class="fbar"><i id="fbar"></i></div><span id="fprogText"></span></div>
+    <div class="fhead"><h3>PC에서 받기</h3><button type="button" id="frefresh">새로고침</button></div>
+    <div class="flist" id="flist"></div>
+  </section>
+
+  <section id="wait" class="view msg">
+    <p id="waitText">연결하는 중</p>
+    <button type="button" class="again" id="again" hidden>다시 연결</button>
+  </section>
+</main>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="shade" data-s="close"></div>
+  <div class="panel" role="dialog" aria-label="연결">
+    <button type="button" class="row" data-s="off">연결 끊기</button>
+    <button type="button" class="row warn" data-s="forget">이 기기 연결 지우기</button>
+    <button type="button" class="row muted" data-s="close">닫기</button>
+  </div>
+</div>
+<div class="sheet" id="memo" hidden>
+  <div class="shade" data-m="close"></div>
+  <div class="panel memo" role="dialog" aria-label="메모">
+    <h3 id="memoWho"></h3>
+    <div class="chips">
+      <button type="button" data-m="chip">발표</button>
+      <button type="button" data-m="chip">질문</button>
+      <button type="button" data-m="chip">과제 안 냄</button>
+      <button type="button" data-m="chip">준비물 안 가져옴</button>
+      <button type="button" data-m="chip">도움을 줌</button>
+    </div>
+    <textarea id="memoText" rows="3" placeholder="메모"></textarea>
+    <div class="memobtns">
+      <button type="button" class="row muted" data-m="close">닫기</button>
+      <button type="button" class="row ok" data-m="save">남기기</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>

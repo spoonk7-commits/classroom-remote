@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>리모컨 연결</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#111318;color:#e8eaf0;font-family:"Malgun Gothic",-apple-system,sans-serif}
+  .box{display:flex;gap:48px;align-items:center;padding:40px}
+  #qr{background:#fff;padding:18px;border-radius:18px;line-height:0}
+  #qr svg{width:320px;height:320px}
+  h1{font-size:26px;margin-bottom:22px}
+  ol{padding-left:22px;line-height:2;font-size:16px;color:#c4c9d4}
+  .sub{margin-top:18px;font-size:13px;color:#6f7686;line-height:1.7}
+  .err{font-size:18px}
+</style>
+</head>
+<body>
+<div class="box" id="box">
+  <div id="qr"></div>
+  <div>
+    <h1>리모컨 연결</h1>
+    <ol>
+      <li>폰·아이패드 카메라로 QR을 찍습니다.</li>
+      <li>열린 화면을 홈 화면에 추가합니다.<br>
+        <span style="color:#8a91a3">아이폰·아이패드: 사파리 공유 단추 → 홈 화면에 추가<br>안드로이드: 크롬 ⋮ → 홈 화면에 추가</span></li>
+      <li>다음부터는 홈 화면 아이콘으로 엽니다.</li>
+    </ol>
+    <p class="sub">이 QR은 이 PC만 조작합니다. 다른 사람에게 보여 주지 마세요.</p>
+  </div>
+</div>
+<script src="qrcode.js"></script>
+<script>
+  var hp = new URLSearchParams(location.hash.slice(1));
+  var r = hp.get('r'), k = hp.get('k');
+  if (!r || !k) {
+    document.getElementById('box').innerHTML = '<p class="err">PC 리모컨 프로그램에서 「연결 QR」을 눌러 여세요.</p>';
+  } else {
+    var url = location.origin + '/#r=' + encodeURIComponent(r) + '&k=' + encodeURIComponent(k);
+    var qr = qrcode(0, 'M'); qr.addData(url); qr.make();
+    document.getElementById('qr').innerHTML = qr.createSvgTag({ cellSize: 6, margin: 0, scalable: true });
+    history.replaceState(null, '', location.pathname);   // 주소창에서 열쇠를 지운다
+  }
+</script>
+</body>
+</html>

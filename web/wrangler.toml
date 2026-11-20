@@ -1,0 +1,9 @@
+name = "stream"
+pages_build_output_dir = "public"
+compatibility_date = "2026-11-01"
+
+# 중계 방은 stream-relay 워커의 Durable Object 를 빌려 쓴다.
+[[durable_objects.bindings]]
+name = "ROOM"
+class_name = "Room"
+script_name = "stream-relay"

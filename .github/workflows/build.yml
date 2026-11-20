@@ -1,0 +1,48 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (C# 5, .NET Framework 4.8 csc)
+        shell: bash
+        run: |
+          bash pc/build.sh
+          mkdir -p dist && cp pc/out/*.exe dist/ClassroomRemote.exe
+
+      - name: Upload unsigned build
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: remote-unsigned
+          path: dist/ClassroomRemote.exe
+
+      # SignPath 승인 뒤: 저장소 Secrets 에 SIGNPATH_API_TOKEN, Variables 에 SIGNPATH_ORGANIZATION_ID 를 넣으면 서명한다.
+      - name: Sign with SignPath
+        if: ${{ vars.SIGNPATH_ORGANIZATION_ID != '' }}
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: classroom-remote
+          signing-policy-slug: release-signing
+          github-artifact-id: ${{ steps.upload.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed
+
+      - name: Release (tags only)
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ vars.SIGNPATH_ORGANIZATION_ID != '' && 'signed/ClassroomRemote.exe' || 'dist/ClassroomRemote.exe' }}

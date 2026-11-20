@@ -1,0 +1,4 @@
+{
+  "codes": { "abcde-12345": { "name": "예시", "preset": "basic" } },
+  "presets": { "basic": { "pages": [ { "name": "도구", "keys": [ { "icon": "▶️", "label": "유튜브", "web": "https://www.youtube.com" } ] } ] } }
+}

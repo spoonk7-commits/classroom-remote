@@ -1,0 +1,12 @@
+# 공개하지 않는 것
+private/
+wr.sh
+설계.md
+시제품.md
+# 빌드 결과·배포 사본
+pc/out/
+web/public/remote.exe
+web/public/remote.zip
+*.log
+.wrangler/
+node_modules/
