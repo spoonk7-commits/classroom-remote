@@ -315,6 +315,7 @@ namespace StreamRemote
             else if (t == "g") Gesture(Str(m, "g"), Int(m, "n"));
             else if (t == "bye") { lock (trusted) trusted.Remove(from); Ui(delegate { UpdateTip(true); }); }
             else if (t == "tt") ToSealed(from, json.Serialize(Rec.Timetable()));
+            else if (t == "edit") Ui(delegate { DeckEditor.Open(store); });   // 폰의 「PC에서 고치기」
             // ---- 사진·파일 주고받기(Files.cs) ----
             else if (t == "fput")
             {
@@ -427,7 +428,7 @@ namespace StreamRemote
                 {
                     var k = ko as Dictionary<string, object>; if (k == null) continue;
                     var s = new Dictionary<string, object>();
-                    foreach (var f in new[] { "icon", "label", "color" }) { object v; if (k.TryGetValue(f, out v)) s[f] = v; }
+                    foreach (var f in new[] { "icon", "label", "color", "row", "big", "main", "w" }) { object v; if (k.TryGetValue(f, out v)) s[f] = v; }
                     keys.Add(s);
                 }
             }

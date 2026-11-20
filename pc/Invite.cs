@@ -15,25 +15,46 @@ namespace StreamRemote
 {
     static class Invite
     {
+        // 공식 배포판에만 들어 있는 기본 주소(빌드할 때 private/host.txt 를 넣음). 공개 저장소 빌드에는 없다.
+        public static string DefaultHost()
+        {
+            try
+            {
+                using (var s = typeof(Invite).Assembly.GetManifestResourceStream("host.txt"))
+                    if (s != null) using (var r = new StreamReader(s, Encoding.UTF8)) return r.ReadToEnd().Trim().ToLowerInvariant();
+            }
+            catch { }
+            return null;
+        }
+
         public static bool Parse(string text, out string host, out string code)
         {
             host = code = null;
             if (text == null) return false;
-            string t = text.Trim();
+            string t = Regex.Replace(text, @"\s+", "");
             t = Regex.Replace(t, @"^https?://", "", RegexOptions.IgnoreCase).Trim('/', ' ');
             int i = t.LastIndexOf('/');
-            if (i <= 0) return false;
-            host = t.Substring(0, i).Trim('/').ToLowerInvariant();
-            code = t.Substring(i + 1).Trim().ToLowerInvariant();
+            if (i <= 0)
+            {
+                // 코드만 넣은 경우: 기본 주소가 있으면 그것으로
+                host = DefaultHost(); code = t.ToLowerInvariant();
+                if (host == null) return false;
+            }
+            else
+            {
+                host = t.Substring(0, i).Trim('/').ToLowerInvariant();
+                code = t.Substring(i + 1).Trim().ToLowerInvariant();
+            }
             if (!Regex.IsMatch(host, @"^[a-z0-9.-]+\.[a-z]{2,}$")) return false;
             if (!Regex.IsMatch(code, @"^[a-z0-9-]{5,40}$")) return false;
             return true;
         }
 
         // 1 = 맞음, 0 = 틀림(끊긴 코드), -1 = 연결 안 됨
+        public static string LastError;
         public static int Check(string host, string code, out Dictionary<string, object> preset)
         {
-            preset = null;
+            preset = null; LastError = null;
             try
             {
                 var req = (HttpWebRequest)WebRequest.Create("https://" + host + "/preset?inv=" + Uri.EscapeDataString(code));
@@ -52,9 +73,9 @@ namespace StreamRemote
             {
                 var hr = e.Response as HttpWebResponse;
                 if (hr != null && (int)hr.StatusCode == 403) return 0;
-                return -1;
+                LastError = e.Status.ToString(); return -1;
             }
-            catch { return -1; }
+            catch (Exception e) { LastError = e.GetType().Name; return -1; }
         }
 
         // 초대 코드 입력 창. 맞는 코드를 넣으면 저장하고 true.
@@ -84,7 +105,7 @@ namespace StreamRemote
                     int r = Check(host, code, out preset);
                     msg.ForeColor = Color.Firebrick;
                     if (r == 0) { msg.Text = "맞지 않거나 끊긴 초대 코드입니다."; return; }
-                    if (r < 0) { msg.Text = "연결되지 않습니다. 인터넷을 확인해 주세요."; return; }
+                    if (r < 0) { msg.Text = "연결되지 않습니다. 인터넷을 확인해 주세요. (" + LastError + ")"; return; }
                     store.SetInvite(host, code);
                     if (preset != null)
                     {

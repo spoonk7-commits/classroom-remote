@@ -1,62 +1,64 @@
 [
   { "name": "유튜브", "exe": ["chrome", "msedge", "whale", "firefox"], "title": "YouTube", "keys": [
-    { "icon": "⏯️", "label": "재생·멈춤", "key": "K" },
-    { "icon": "⏪", "label": "10초 뒤로", "key": "J" },
-    { "icon": "⏩", "label": "10초 앞으로", "key": "L" },
-    { "icon": "⛶", "label": "전체 화면", "key": "F" },
-    { "icon": "💬", "label": "자막", "key": "C" },
-    { "icon": "🐢", "label": "느리게", "key": "shift+," },
-    { "icon": "🐇", "label": "빠르게", "key": "shift+." },
-    { "icon": "🔇", "label": "소리 끄기", "key": "M" }
+    { "row": 1, "icon": "ti-subtitles", "label": "자막", "key": "C" },
+    { "row": 1, "icon": "ti-maximize", "label": "전체 화면", "key": "F" },
+    { "row": 1, "icon": "ti-volume-3", "label": "소리 끄기", "key": "M" },
+    { "row": 2, "icon": "ti-chevrons-left", "label": "느리게", "key": "shift+," },
+    { "row": 2, "icon": "ti-chevrons-right", "label": "빠르게", "key": "shift+." },
+    { "row": 9, "big": true, "icon": "ti-rewind-backward-10", "label": "10초", "key": "J" },
+    { "row": 9, "big": true, "main": true, "w": 1.4, "icon": "ti-player-play", "label": "재생·멈춤", "key": "K" },
+    { "row": 9, "big": true, "icon": "ti-rewind-forward-10", "label": "10초", "key": "L" }
   ] },
   { "name": "PDF", "exe": ["chrome", "msedge", "whale"], "title": ".pdf", "keys": [
-    { "icon": "⬆️", "label": "이전 쪽", "key": "PageUp" },
-    { "icon": "⬇️", "label": "다음 쪽", "key": "PageDown" },
-    { "icon": "📄", "label": "쪽 맞춤", "key": "ctrl+\\" },
-    { "icon": "➕", "label": "확대", "key": "ctrl+=" },
-    { "icon": "➖", "label": "축소", "key": "ctrl+-" },
-    { "icon": "⛶", "label": "전체 화면", "key": "F11" }
+    { "row": 1, "icon": "ti-arrows-minimize", "label": "쪽 맞춤", "key": "ctrl+\\" },
+    { "row": 1, "icon": "ti-zoom-in", "label": "확대", "key": "ctrl+=" },
+    { "row": 1, "icon": "ti-zoom-out", "label": "축소", "key": "ctrl+-" },
+    { "row": 1, "icon": "ti-maximize", "label": "전체 화면", "key": "F11" },
+    { "row": 9, "big": true, "icon": "ti-arrow-up", "label": "이전 쪽", "key": "PageUp" },
+    { "row": 9, "big": true, "main": true, "w": 1.5, "icon": "ti-arrow-down", "label": "다음 쪽", "key": "PageDown" }
   ] },
   { "name": "크롬·엣지", "exe": ["chrome", "msedge", "whale", "firefox"], "keys": [
-    { "icon": "➕", "label": "새 탭", "key": "ctrl+T" },
-    { "icon": "✖️", "label": "탭 닫기", "key": "ctrl+W" },
-    { "icon": "◀️", "label": "뒤로", "key": "alt+Left" },
-    { "icon": "🔄", "label": "새로고침", "key": "F5" },
-    { "icon": "⛶", "label": "전체 화면", "key": "F11" },
-    { "icon": "🔍", "label": "확대", "key": "ctrl+=" },
-    { "icon": "🔎", "label": "축소", "key": "ctrl+-" },
-    { "icon": "↩️", "label": "닫은 탭 열기", "key": "ctrl+shift+T" }
+    { "row": 1, "icon": "ti-plus", "label": "새 탭", "key": "ctrl+T" },
+    { "row": 1, "icon": "ti-x", "label": "탭 닫기", "key": "ctrl+W" },
+    { "row": 1, "icon": "ti-history", "label": "닫은 탭", "key": "ctrl+shift+T" },
+    { "row": 2, "icon": "ti-zoom-in", "label": "확대", "key": "ctrl+=" },
+    { "row": 2, "icon": "ti-zoom-out", "label": "축소", "key": "ctrl+-" },
+    { "row": 2, "icon": "ti-maximize", "label": "전체 화면", "key": "F11" },
+    { "row": 9, "big": true, "icon": "ti-arrow-left", "label": "뒤로", "key": "alt+Left" },
+    { "row": 9, "big": true, "icon": "ti-refresh", "label": "새로고침", "key": "F5" }
   ] },
   { "name": "파워포인트", "exe": ["POWERPNT"], "keys": [
-    { "icon": "🎬", "label": "처음부터 쇼", "key": "F5" },
-    { "icon": "▶️", "label": "이 쪽부터 쇼", "key": "shift+F5" },
-    { "icon": "⏮️", "label": "이전", "key": "Left" },
-    { "icon": "⏭️", "label": "다음", "key": "Right" },
-    { "icon": "⬛", "label": "검은 화면", "key": "B" },
-    { "icon": "⬜", "label": "흰 화면", "key": "W" },
-    { "icon": "🖊️", "label": "펜", "key": "ctrl+P" },
-    { "icon": "🧽", "label": "필기 지우기", "key": "E" },
-    { "icon": "🖱️", "label": "화살표", "key": "ctrl+A" },
-    { "icon": "⏹️", "label": "쇼 끝내기", "key": "Esc" }
+    { "row": 1, "icon": "ti-player-play", "label": "처음부터", "key": "F5" },
+    { "row": 1, "icon": "ti-player-skip-forward", "label": "이 쪽부터", "key": "shift+F5" },
+    { "row": 1, "icon": "ti-player-stop", "label": "쇼 끝내기", "key": "Esc" },
+    { "row": 2, "icon": "ti-moon", "label": "검은 화면", "key": "B" },
+    { "row": 2, "icon": "ti-sun", "label": "흰 화면", "key": "W" },
+    { "row": 3, "icon": "ti-pencil", "label": "펜", "key": "ctrl+P" },
+    { "row": 3, "icon": "ti-eraser", "label": "지우기", "key": "E" },
+    { "row": 3, "icon": "ti-pointer", "label": "화살표", "key": "ctrl+A" },
+    { "row": 9, "big": true, "icon": "ti-chevron-left", "label": "이전", "key": "Left" },
+    { "row": 9, "big": true, "main": true, "w": 1.5, "icon": "ti-chevron-right", "label": "다음", "key": "Right" }
   ] },
   { "name": "한글", "exe": ["Hwp"], "keys": [
-    { "icon": "💾", "label": "저장", "key": "ctrl+S" },
-    { "icon": "📝", "label": "다른 이름으로", "key": "alt+V" },
-    { "icon": "🖨️", "label": "인쇄", "key": "alt+P" },
-    { "icon": "↩️", "label": "되돌리기", "key": "ctrl+Z" }
+    { "row": 1, "icon": "ti-device-floppy", "label": "저장", "key": "ctrl+S" },
+    { "row": 1, "icon": "ti-file-export", "label": "다른 이름으로", "key": "alt+V" },
+    { "row": 1, "icon": "ti-printer", "label": "인쇄", "key": "alt+P" },
+    { "row": 2, "icon": "ti-arrow-back-up", "label": "되돌리기", "key": "ctrl+Z" },
+    { "row": 2, "icon": "ti-arrow-forward-up", "label": "다시 하기", "key": "ctrl+shift+Z" }
   ] },
   { "name": "엑셀", "exe": ["EXCEL"], "keys": [
-    { "icon": "💾", "label": "저장", "key": "ctrl+S" },
-    { "icon": "🖨️", "label": "인쇄", "key": "ctrl+P" },
-    { "icon": "🔽", "label": "필터", "key": "ctrl+shift+L" },
-    { "icon": "↩️", "label": "되돌리기", "key": "ctrl+Z" }
+    { "row": 1, "icon": "ti-device-floppy", "label": "저장", "key": "ctrl+S" },
+    { "row": 1, "icon": "ti-printer", "label": "인쇄", "key": "ctrl+P" },
+    { "row": 1, "icon": "ti-filter", "label": "필터", "key": "ctrl+shift+L" },
+    { "row": 2, "icon": "ti-arrow-back-up", "label": "되돌리기", "key": "ctrl+Z" },
+    { "row": 2, "icon": "ti-arrow-forward-up", "label": "다시 하기", "key": "ctrl+Y" }
   ] },
   { "name": "팟플레이어", "exe": ["PotPlayerMini64", "PotPlayerMini", "PotPlayer64", "PotPlayer"], "keys": [
-    { "icon": "⏯️", "label": "재생·멈춤", "key": "Space" },
-    { "icon": "⏪", "label": "뒤로", "key": "Left" },
-    { "icon": "⏩", "label": "앞으로", "key": "Right" },
-    { "icon": "⛶", "label": "전체 화면", "key": "Enter" },
-    { "icon": "🔊", "label": "소리 크게", "key": "Up" },
-    { "icon": "🔉", "label": "소리 작게", "key": "Down" }
+    { "row": 1, "icon": "ti-maximize", "label": "전체 화면", "key": "Enter" },
+    { "row": 1, "icon": "ti-volume-2", "label": "작게", "key": "Down" },
+    { "row": 1, "icon": "ti-volume", "label": "크게", "key": "Up" },
+    { "row": 9, "big": true, "icon": "ti-player-track-prev", "label": "뒤로", "key": "Left" },
+    { "row": 9, "big": true, "main": true, "w": 1.4, "icon": "ti-player-play", "label": "재생·멈춤", "key": "Space" },
+    { "row": 9, "big": true, "icon": "ti-player-track-next", "label": "앞으로", "key": "Right" }
   ] }
 ]

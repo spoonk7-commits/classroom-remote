@@ -5,52 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="리모컨">
-<meta name="theme-color" content="#111318">
+<meta name="theme-color" content="#F3F0FF">
 <link rel="apple-touch-icon" href="icon.png">
 <title>리모컨</title>
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
 <header class="top">
-  <span class="dot" id="dot"></span>
-  <nav class="tabs" role="tablist">
-    <button type="button" class="tab on" data-tab="deck" role="tab" aria-selected="true">단추</button>
-    <button type="button" class="tab" data-tab="pad" role="tab" aria-selected="false">제스처</button>
-    <button type="button" class="tab" data-tab="att" role="tab" aria-selected="false">출결</button>
-    <button type="button" class="tab" data-tab="files" role="tab" aria-selected="false">파일</button>
-  </nav>
-  <button type="button" class="pw" id="pw" aria-label="연결 끊기">⏻</button>
+  <span class="dot" id="dot" aria-hidden="true"></span>
+  <span class="chip" id="appchip">리모컨</span>
+  <span class="sp"></span>
+  <button type="button" class="pw" id="pw" aria-label="연결"><svg class="i"><use href="icons.svg#ti-power"></use></svg></button>
 </header>
 
 <main>
-  <div class="appbar" id="appbar" hidden>
-    <h3 id="appname"></h3>
-    <div class="appkeys" id="appkeys"></div>
-  </div>
-
-  <section id="deck" class="view on">
-    <div class="pages" id="pages"></div>
-    <div class="pdots" id="pdots"></div>
+  <section id="remote" class="view">
+    <div class="rtop" id="rtop"></div>
+    <div class="rpad" id="rpad"><p class="hint">밀어서 넘기기 · 두 손가락 위아래로 소리</p></div>
+    <div class="rbig" id="rbig"></div>
   </section>
 
-  <section id="pad" class="view">
-    <div class="padarea" id="padarea">
-      <div class="guide">
-        <p><b>한 손가락</b> 왼쪽 · 오른쪽 — 다음 쪽 · 이전 쪽</p>
-        <p><b>한 손가락</b> 위 · 아래 — 아래로 · 위로 넘기기</p>
-        <p><b>두 손가락</b> 위 · 아래 — 소리 크게 · 작게</p>
-        <p><b>두 손가락</b> 왼쪽 · 오른쪽 — 되돌리기 · 다시 하기</p>
-        <p><b>두 손가락</b> 톡 — 소리 끄기 · 켜기</p>
-      </div>
-    </div>
-    <div class="padkeys">
-      <button type="button" data-g="switch">창 전환</button>
-      <button type="button" data-g="desktop">바탕화면</button>
-      <button type="button" data-g="zoomin">확대</button>
-      <button type="button" data-g="zoomout">축소</button>
-    </div>
+  <section id="deck" class="view">
+    <div class="deckin" id="deckin"></div>
   </section>
 
   <section id="att" class="view">
@@ -68,19 +46,28 @@
 
   <section id="files" class="view">
     <div class="fbtns">
-      <label class="fbig">사진 찍기<input type="file" id="fcam" accept="image/*" capture="environment" hidden></label>
-      <label class="fbig">사진·파일 보내기<input type="file" id="fpick" multiple hidden></label>
+      <label class="fbig main"><svg class="i"><use href="icons.svg#ti-camera"></use></svg>사진 찍기<input type="file" id="fcam" accept="image/*" capture="environment" hidden></label>
+      <label class="fbig"><svg class="i"><use href="icons.svg#ti-upload"></use></svg>사진·파일 보내기<input type="file" id="fpick" multiple hidden></label>
     </div>
     <div class="fprog" id="fprog" hidden><div class="fbar"><i id="fbar"></i></div><span id="fprogText"></span></div>
-    <div class="fhead"><h3>PC에서 받기</h3><button type="button" id="frefresh">새로고침</button></div>
+    <div class="fhead"><h3>PC에서 받기</h3><button type="button" id="frefresh" aria-label="새로고침"><svg class="i"><use href="icons.svg#ti-refresh"></use></svg></button></div>
     <div class="flist" id="flist"></div>
   </section>
 
   <section id="wait" class="view msg">
-    <p id="waitText">연결하는 중</p>
-    <button type="button" class="again" id="again" hidden>다시 연결</button>
+    <div class="msgcard">
+      <p id="waitText">연결하는 중</p>
+      <button type="button" class="again" id="again" hidden>다시 연결</button>
+    </div>
   </section>
 </main>
+
+<nav class="bar" role="tablist">
+  <button type="button" class="tab on" data-tab="remote" role="tab" aria-selected="true"><svg class="i"><use href="icons.svg#ti-device-remote"></use></svg><span>리모컨</span></button>
+  <button type="button" class="tab" data-tab="deck" role="tab" aria-selected="false"><svg class="i"><use href="icons.svg#ti-layout-grid"></use></svg><span>단추</span></button>
+  <button type="button" class="tab" data-tab="att" role="tab" aria-selected="false"><svg class="i"><use href="icons.svg#ti-clipboard-check"></use></svg><span>출결</span></button>
+  <button type="button" class="tab" data-tab="files" role="tab" aria-selected="false"><svg class="i"><use href="icons.svg#ti-photo"></use></svg><span>파일</span></button>
+</nav>
 
 <div class="sheet" id="sheet" hidden>
   <div class="shade" data-s="close"></div>

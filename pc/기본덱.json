@@ -1,24 +1,26 @@
 {
-  "colors": { "수업": "#ff7a45", "도구": "#7d8597", "생활": "#f2a93b" },
+  "colors": { "수업": "#F07A3E", "도구": "#1FA870", "생활": "#E0446A" },
   "pages": [
-    { "name": "도구", "keys": [
-      { "cat": "생활", "icon": "▶️", "label": "유튜브", "web": "https://www.youtube.com" },
-      { "cat": "도구", "icon": "📁", "label": "파일 탐색기", "key": "win+E" },
-      { "cat": "도구", "icon": "⬇️", "label": "받은 파일", "app": "%USERPROFILE%\\Downloads" },
-      { "cat": "도구", "icon": "✂️", "label": "화면 캡처", "key": "win+shift+S" },
-      { "cat": "도구", "icon": "🖥️", "label": "바탕화면", "key": "win+D" },
-      { "cat": "도구", "icon": "🧮", "label": "계산기", "app": "calc" }
-    ] },
     { "name": "수업", "keys": [
-      { "cat": "수업", "icon": "⏮️", "label": "이전 쪽", "key": "Left" },
-      { "cat": "수업", "icon": "⏭️", "label": "다음 쪽", "key": "Right" },
-      { "cat": "수업", "icon": "🎬", "label": "쇼 시작", "key": "F5" },
-      { "cat": "수업", "icon": "⬛", "label": "화면 검게", "key": "B" },
-      { "cat": "수업", "icon": "⏯️", "label": "재생·멈춤", "key": "Space" },
-      { "cat": "수업", "icon": "⏹️", "label": "쇼 끝내기", "key": "Esc" },
-      { "cat": "도구", "icon": "🔊", "label": "소리 크게", "key": "VolumeUp" },
-      { "cat": "도구", "icon": "🔉", "label": "소리 작게", "key": "VolumeDown" },
-      { "cat": "도구", "icon": "🔇", "label": "소리 끄기", "key": "VolumeMute" }
+      { "cat": "수업", "icon": "ti-presentation", "label": "쇼 시작", "key": "F5" },
+      { "cat": "수업", "icon": "ti-chevron-left", "label": "이전 쪽", "key": "Left" },
+      { "cat": "수업", "icon": "ti-chevron-right", "label": "다음 쪽", "key": "Right" },
+      { "cat": "수업", "icon": "ti-moon", "label": "화면 검게", "key": "B" },
+      { "cat": "수업", "icon": "ti-player-play", "label": "재생·멈춤", "key": "Space" },
+      { "cat": "수업", "icon": "ti-player-stop", "label": "쇼 끝내기", "key": "Esc" }
+    ] },
+    { "name": "도구", "keys": [
+      { "cat": "생활", "icon": "ti-brand-youtube", "label": "유튜브", "web": "https://www.youtube.com" },
+      { "cat": "도구", "icon": "ti-screenshot", "label": "화면 캡처", "key": "win+shift+S" },
+      { "cat": "도구", "icon": "ti-device-desktop", "label": "바탕화면", "key": "win+D" },
+      { "cat": "도구", "icon": "ti-folder", "label": "파일 탐색기", "key": "win+E" },
+      { "cat": "도구", "icon": "ti-download", "label": "받은 파일", "app": "%USERPROFILE%\\Downloads" },
+      { "cat": "도구", "icon": "ti-calculator", "label": "계산기", "app": "calc" }
+    ] },
+    { "name": "소리", "keys": [
+      { "cat": "도구", "icon": "ti-volume-2", "label": "작게", "key": "VolumeDown" },
+      { "cat": "도구", "icon": "ti-volume", "label": "크게", "key": "VolumeUp" },
+      { "cat": "도구", "icon": "ti-volume-3", "label": "끄기", "key": "VolumeMute" }
     ] }
   ]
 }

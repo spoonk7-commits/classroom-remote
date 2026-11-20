@@ -10,33 +10,33 @@
   if (room && key) { try { localStorage.setItem('pair', JSON.stringify({ r: room, k: key })); } catch (e) {} }
   else { try { var s = JSON.parse(localStorage.getItem('pair') || 'null'); if (s) { room = s.r; key = s.k; } } catch (e) {} }
 
-  var views = { deck: $('deck'), pad: $('pad'), att: $('att'), files: $('files'), wait: $('wait') };
-  var tab = 'deck', ready = false, cur = 'wait';
-  // 넓은 화면(패드 전체)이면 단추·제스처 판을 한 화면에, 좁으면(폰·화면 나누기) 탭으로
-  function isWide() { return window.innerWidth >= 900 && window.innerHeight >= 500; }
+  var views = { remote: $('remote'), deck: $('deck'), att: $('att'), files: $('files'), wait: $('wait') };
+  var tab = 'remote', ready = false, cur = 'wait';
+  // 넓은 화면(패드 가로)이면 리모컨과 단추를 한 화면에, 좁으면(폰·화면 나누기) 아래 탭으로
+  function isWide() { return window.innerWidth >= 900 && window.innerWidth > window.innerHeight; }
   function show(name) {
     cur = name;
     var wide = document.body.classList.contains('wide');
     for (var k in views) {
-      var on = name === 'wait' || name === 'att' || name === 'files' ? k === name : (wide ? (k === 'deck' || k === 'pad') : k === name);
+      var on = (wide && (name === 'remote' || name === 'deck')) ? (k === 'remote' || k === 'deck') : k === name;
       views[k].classList.toggle('on', on);
     }
-    $('appbar').hidden = !(wide && (name === 'deck' || name === 'pad') && appData && appData.name);
   }
   function layout() {
     document.body.classList.toggle('wide', isWide());
+    if (document.body.classList.contains('wide') && tab === 'deck') selectTab('remote');
     show(cur);
   }
   function waitMsg(t, again) { $('waitText').innerHTML = t; $('again').hidden = !again; if (!ready) show('wait'); }
-
+  function selectTab(name) {
+    tab = name;
+    document.querySelectorAll('.tab').forEach(function (x) { var on = x.dataset.tab === name; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); });
+    if (ready) show(tab);
+    if (ready && tab === 'att') openAtt();
+    if (ready && tab === 'files') openFiles();
+  }
   document.querySelectorAll('.tab').forEach(function (b) {
-    b.addEventListener('click', function () {
-      tab = b.dataset.tab;
-      document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b); });
-      if (ready) show(tab);
-      if (ready && tab === 'att') openAtt();
-      if (ready && tab === 'files') openFiles();
-    });
+    b.addEventListener('click', function () { selectTab(b.dataset.tab); });
   });
 
   var toastT = 0;
@@ -108,7 +108,7 @@
     setDot();
   }
   function onSealed(m) {
-    if (m.t === 'deck') { sess = m.sn || null; seq = 0; ready = true; deckData = m; buildDeck(); show(tab); if (tab === 'att') openAtt(); if (tab === 'files') openFiles(); }
+    if (m.t === 'deck') { sess = m.sn || null; seq = 0; ready = true; deckData = m; buildDeck(); buildRemote(); show(tab); if (tab === 'att') openAtt(); if (tab === 'files') openFiles(); }
     else if (m.t === 'app') { onApp(m); }
     else if (m.t === 'tt') { onTT(m); }
     else if (m.t === 'roster') { onRoster(m); }
@@ -171,18 +171,20 @@
 
   // ---- 단추 ----
   var deckData = null, appData = null;
-  function colsFor(el) {
-    var w = el.clientWidth || window.innerWidth;
-    return w >= 640 ? 5 : w >= 470 ? 4 : 3;
+  var noTapUntil = 0;   // 두 손가락이 닿은 뒤에는 잠깐 단추 누름을 막는다
+  function icon(name) {
+    if (name && name.indexOf('ti-') === 0) {
+      var sv = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); sv.setAttribute('class', 'i');
+      var u = document.createElementNS('http://www.w3.org/2000/svg', 'use'); u.setAttribute('href', 'icons.svg#' + name);
+      sv.appendChild(u); return sv;
+    }
+    var e = document.createElement('span'); e.className = 'em'; e.textContent = name || '•'; return e;
   }
-  // 두 손가락이 닿은 뒤에는 잠깐 단추 누름을 막는다
-  var noTapUntil = 0;
-  function makeKey(k, colors, onPress) {
-    var b = document.createElement('button'); b.type = 'button'; b.className = 'key';
-    b.style.setProperty('--c', k.color || (colors && colors[k.cat]) || '#7d8597');
-    var ic = document.createElement('span'); ic.className = 'ic'; ic.textContent = k.icon || '•';
-    var lb = document.createElement('span'); lb.className = 'lb'; lb.textContent = k.label || '';
-    b.appendChild(ic); b.appendChild(lb);
+  function makeKey(k, color, onPress, cls) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'k' + (cls ? ' ' + cls : '');
+    if (color) b.style.setProperty('--kc', color);
+    b.appendChild(icon(k.icon));
+    var lb = document.createElement('span'); lb.className = 'lb'; lb.textContent = k.label || ''; b.appendChild(lb);
     b.addEventListener('click', function () {
       if (Date.now() < noTapUntil) return;
       buzz();
@@ -190,62 +192,73 @@
     });
     return b;
   }
-  function appKeyPress(i) { return function () { return send({ t: 'run', a: 1, i: i }); }; }
+  function gest(g, label) { return function () { toast(label); return send({ t: 'g', g: g, n: 0 }); }; }
 
-  function buildDeck(keepPage) {
+  // 단추 탭: 쪽마다 제목을 달고 세로로 늘어놓는다
+  function colsFor(el) { var w = el.clientWidth || window.innerWidth; return w >= 640 ? 5 : w >= 460 ? 4 : 3; }
+  function buildDeck() {
     var d = deckData; if (!d) return;
-    var pagesEl = $('pages'), dotsEl = $('pdots');
-    var at = keepPage ? Math.round(pagesEl.scrollLeft / Math.max(1, pagesEl.clientWidth)) : 0;
-    pagesEl.innerHTML = ''; dotsEl.innerHTML = '';
-    var colors = d.colors || {}, cols = colsFor(pagesEl);
-    var list = [];
-    // 좁은 화면이면 앱 단추를 맨 앞 쪽으로
-    var wide = document.body.classList.contains('wide');
-    if (!wide && appData && appData.name && (appData.keys || []).length) list.push({ app: true, name: '지금: ' + appData.name, keys: appData.keys });
-    (d.pages || []).forEach(function (pg, pi) { list.push({ name: pg.name, keys: pg.keys || [], pi: pi }); });
-    list.forEach(function (pg, n) {
-      var page = document.createElement('div'); page.className = 'page' + (pg.app ? ' apppage' : '');
-      var h = document.createElement('h2'); h.textContent = pg.name || ''; page.appendChild(h);
+    var box = $('deckin'); box.innerHTML = '';
+    var colors = d.colors || {}, cols = colsFor(box);
+    (d.pages || []).forEach(function (pg, pi) {
+      var h = document.createElement('h3'); h.className = 'sec'; h.textContent = pg.name || ''; box.appendChild(h);
       var grid = document.createElement('div'); grid.className = 'grid'; grid.style.setProperty('--cols', cols);
-      pg.keys.forEach(function (k, ki) {
-        grid.appendChild(makeKey(k, colors, pg.app ? appKeyPress(ki) : function () { return send({ t: 'run', p: pg.pi, i: ki }); }));
+      (pg.keys || []).forEach(function (k, ki) {
+        grid.appendChild(makeKey(k, k.color || colors[k.cat] || '#8E7CF0', function () { return send({ t: 'run', p: pi, i: ki }); }));
       });
-      page.appendChild(grid); pagesEl.appendChild(page);
-      var dot = document.createElement('i'); dotsEl.appendChild(dot);
+      if (pi === (d.pages.length - 1)) {
+        grid.appendChild(makeKey({ icon: 'ti-pencil', label: 'PC에서 고치기' }, null, function () { toast('PC에 단추 고치기 창을 띄웁니다'); return send({ t: 'edit' }); }, 'add'));
+      }
+      box.appendChild(grid);
     });
-    dotsEl.style.display = list.length > 1 ? '' : 'none';
-    at = Math.min(at, list.length - 1);
-    pagesEl.scrollLeft = at * pagesEl.clientWidth;
-    markDot();
-    buildAppbar();
   }
-  function buildAppbar() {
-    var bar = $('appkeys'); bar.innerHTML = '';
-    $('appname').textContent = appData && appData.name ? appData.name : '';
-    if (appData && appData.keys) appData.keys.forEach(function (k, i) { bar.appendChild(makeKey(k, null, appKeyPress(i))); });
-    show(cur);
+
+  // 리모컨 탭: 앞에 있는 앱의 배치판. 같은 row 는 한 줄, big 은 아래(엄지 쪽), main 은 보라 채움
+  function rowEl(keys, mk) {
+    var r = document.createElement('div'); r.className = 'row';
+    r.style.gridTemplateColumns = keys.map(function (k) { return (+k.w || 1) + 'fr'; }).join(' ');
+    keys.forEach(function (k) { r.appendChild(mk(k)); });
+    return r;
   }
-  function onApp(m) {
-    var was = appData && appData.name;
-    appData = m;
-    var wide = document.body.classList.contains('wide');
-    // 앱이 바뀌면(좁은 화면) 앱 단추 쪽으로 넘어간다
-    buildDeck(!(m.name && m.name !== was && !wide));
+  function buildRemote() {
+    var top = $('rtop'), big = $('rbig'); top.innerHTML = ''; big.innerHTML = '';
+    var name = appData && appData.name, keys = (appData && appData.keys) || [];
+    $('appchip').textContent = name || '리모컨';
+    if (!name || !keys.length) {
+      // 맞는 앱이 없을 때: 창 다루기 + 이전·다음
+      top.appendChild(rowEl([
+        { icon: 'ti-switch-horizontal', label: '창 전환', g: 'switch' }, { icon: 'ti-device-desktop', label: '바탕화면', g: 'desktop' },
+        { icon: 'ti-zoom-in', label: '확대', g: 'zoomin' }, { icon: 'ti-zoom-out', label: '축소', g: 'zoomout' }
+      ], function (k) { return makeKey(k, null, gest(k.g, k.label)); }));
+      big.appendChild(rowEl([{ icon: 'ti-chevron-left', label: '이전', g: 'prev' }, { icon: 'ti-chevron-right', label: '다음', g: 'next', main: 1, w: 1.5 }],
+        function (k) { return makeKey(k, null, gest(k.g, k.label), 'big' + (k.main ? ' main' : '')); }));
+      return;
+    }
+    var rows = {}, order = [];
+    keys.forEach(function (k, i) {
+      var r = k.row != null ? String(k.row) : 'x' + Math.floor(i / 3);
+      if (!rows[r]) { rows[r] = []; order.push(r); }
+      rows[r].push({ k: k, i: i });
+    });
+    order.forEach(function (r) {
+      var list = rows[r], isBig = list.some(function (x) { return x.k.big; });
+      var el = rowEl(list.map(function (x) { var c = {}; for (var f in x.k) c[f] = x.k[f]; c._i = x.i; return c; }), function (k) {
+        return makeKey(k, null, function () { return send({ t: 'run', a: 1, i: k._i }); }, (isBig ? 'big' : '') + (k.main ? ' main' : ''));
+      });
+      (isBig ? big : top).appendChild(el);
+    });
   }
-  function markDot() {
-    var el = $('pages'), i = Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
-    Array.prototype.forEach.call($('pdots').children, function (d, k) { d.classList.toggle('on', k === i); });
-  }
-  $('pages').addEventListener('scroll', markDot, { passive: true });
+  function onApp(m) { appData = m; buildRemote(); }
+
   var rzT = 0;
   window.addEventListener('resize', function () {
     clearTimeout(rzT);
-    rzT = setTimeout(function () { var w = document.body.classList.contains('wide'); layout(); if (deckData && (w !== document.body.classList.contains('wide') || true)) buildDeck(true); }, 150);
+    rzT = setTimeout(function () { layout(); buildDeck(); }, 150);
   });
-  layout();
+  layout(); buildRemote();
 
   // ---- 제스처: 손을 다 뗄 때 한 번만 보낸다 ----
-  // 제스처 판: 한 손가락·두 손가락 모두. 단추 화면: 두 손가락만(한 손가락은 단추 누르기·쪽 넘기기).
+  // 리모컨 가운데 판: 한 손가락·두 손가락 모두. 단추가 있는 곳: 두 손가락만.
   function center(ts) { var x = 0, y = 0; for (var i = 0; i < ts.length; i++) { x += ts[i].clientX; y += ts[i].clientY; } return { x: x / ts.length, y: y / ts.length }; }
   function gestures(el, padMode) {
     var g = null;
@@ -275,19 +288,13 @@
     }, { passive: false });
     el.addEventListener('touchcancel', function () { g = null; });
   }
-  gestures($('padarea'), true);
+  gestures($('rpad'), true);
+  gestures($('rtop'), false);
+  gestures($('rbig'), false);
   gestures($('deck'), false);
-  gestures($('appbar'), false);
   // 아이폰 사파리의 두 손가락 확대 막기
   document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
   document.addEventListener('dblclick', function (e) { e.preventDefault(); }, { passive: false });
-
-  document.querySelectorAll('[data-g]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      buzz(); toast(b.textContent.trim());
-      if (!send({ t: 'g', g: b.getAttribute('data-g'), n: 0 })) toast('연결되지 않음');
-    });
-  });
 
   function decide(s) {
     var dx = s.last.x - s.start.x, dy = s.last.y - s.start.y, dt = Date.now() - s.t0;

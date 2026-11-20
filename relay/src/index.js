@@ -31,9 +31,7 @@ export class Room {
     } else {
       if (!live(await this.state.storage.get('inv'))) return new Response('invite', { status: 403 });
     }
-    if (role === 'phone' && this.state.getWebSockets('phone').length >= MAX_PHONES) {
-      return new Response('too many', { status: 429 });
-    }
+    if (role === 'phone') this.prunePhones();
     if (role === 'pc') {
       // PC는 하나만. 새로 붙으면 옛 연결은 닫는다(프로그램을 다시 켠 경우).
       for (const old of this.state.getWebSockets('pc')) { try { old.close(4000, 'replaced'); } catch (e) {} }
@@ -41,10 +39,11 @@ export class Room {
     const pair = new WebSocketPair();
     const id = role === 'pc' ? 'pc' : 'd' + Math.random().toString(36).slice(2, 8);
     this.state.acceptWebSocket(pair[1], [role, id]);
+    pair[1].serializeAttachment({ t: Date.now() });
     if (role === 'phone') this.toPc({ t: 'join', from: id });
     else this.toPhones({ t: 'pc', on: true });
     if (role === 'phone') {
-      const on = this.state.getWebSockets('pc').length > 0;
+      const on = !!this.livePc();
       pair[1].send(JSON.stringify({ t: 'pc', on }));
     }
     return new Response(null, { status: 101, webSocket: pair[0] });
@@ -55,7 +54,7 @@ export class Room {
     const [role, id] = this.state.getTags(ws);
     if (role === 'phone') {
       // 폰 → PC: 누가 보냈는지만 붙여서 넘긴다. 내용은 그대로(문자열 이어 붙이기, 해석하지 않음).
-      const pc = this.state.getWebSockets('pc')[0];
+      const pc = this.livePc();
       if (pc) pc.send('{"from":"' + id + '","m":' + JSON.stringify(msg) + '}');
       else ws.send(JSON.stringify({ t: 'pc', on: false }));
     } else {
@@ -80,8 +79,33 @@ export class Room {
 
   async webSocketError(ws) { return this.webSocketClose(ws, 1011); }
 
+  // 연결이 마지막으로 살아 있던 때: 붙은 때와 자동 응답(p→o) 때 가운데 늦은 것
+  seen(w) {
+    const a = (w.deserializeAttachment && w.deserializeAttachment()) || {};
+    const r = this.state.getWebSocketAutoResponseTimestamp(w);
+    return Math.max(a.t || 0, r ? r.getTime() : 0);
+  }
+  // 강제로 끈 PC의 연결이 남아 있을 수 있다: 가장 최근에 붙은 PC 연결 하나
+  livePc() {
+    let best = null, bt = -1;
+    for (const w of this.state.getWebSockets('pc')) {
+      const a = (w.deserializeAttachment && w.deserializeAttachment()) || {};
+      if ((a.t || 0) > bt) { bt = a.t || 0; best = w; }
+    }
+    return best;
+  }
+  // 폰: 90초 넘게 말이 없으면 끊긴 것으로 보고 닫는다. 그래도 많으면 오래된 것부터 닫는다(새 연결은 막지 않음).
+  prunePhones() {
+    const now = Date.now();
+    let list = this.state.getWebSockets('phone');
+    for (const w of list) if (now - this.seen(w) > 90000) { try { w.close(4001, 'stale'); } catch (e) {} }
+    list = this.state.getWebSockets('phone').filter((w) => now - this.seen(w) <= 90000)
+      .sort((a, b) => this.seen(a) - this.seen(b));
+    while (list.length >= MAX_PHONES) { const w = list.shift(); try { w.close(4002, 'too many'); } catch (e) {} }
+  }
+
   toPc(obj) {
-    const pc = this.state.getWebSockets('pc')[0];
+    const pc = this.livePc();
     if (pc) { try { pc.send(JSON.stringify(obj)); } catch (e) {} }
   }
   toPhones(obj) {

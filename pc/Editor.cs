@@ -1337,6 +1337,8 @@ namespace StreamRemote
             object iv, lv;
             string icon = Key != null && Key.TryGetValue("icon", out iv) && iv != null ? iv.ToString() : "";
             string label = Key != null && Key.TryGetValue("label", out lv) && lv != null ? lv.ToString() : "";
+            // 폰에서 선 아이콘(ti-…)으로 그리는 단추는 여기서는 이름 첫 글자로 보인다
+            if (icon.StartsWith("ti-")) icon = label.Length > 0 ? label.Substring(0, 1) : "•";
             var top = new Rectangle(0, Height / 12, Width, Height * 6 / 12);
             TextRenderer.DrawText(g, icon, emoji, top, Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
             var bot = new Rectangle(4, Height * 7 / 12, Width - 8, Height * 5 / 12 - 4);
