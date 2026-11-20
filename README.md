@@ -8,4 +8,6 @@
 
 중계 서버 주소와 초대 코드는 이 저장소에 없습니다. 프로그램을 처음 실행할 때 받은 초대 코드를 넣습니다.
 
-[코드 서명 정책](CODE_SIGNING.md) · [MIT License](LICENSE)
+지우기: 알림 영역 아이콘 → 끝내기, 「윈도우 켤 때 같이 켜기」를 껐다면 리모컨 폴더와 바탕화면 바로가기를 지웁니다.
+
+[Code signing policy](CODE_SIGNING.md) · [MIT License](LICENSE)
